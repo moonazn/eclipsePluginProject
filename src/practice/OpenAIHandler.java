@@ -13,6 +13,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+
 public class OpenAIHandler extends AbstractHandler {
 	
 
@@ -24,7 +29,7 @@ public class OpenAIHandler extends AbstractHandler {
     
     public String callOpenAPI(String selectedText) throws ExecutionException {
         // OpenAI API 인증 정보
-        String apiKey = "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";
+        String apiKey = "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";
 
         // 요청할 엔드포인트 URL
         String apiUrl = "https://api.openai.com/v1/chat/completions";
@@ -48,12 +53,22 @@ public class OpenAIHandler extends AbstractHandler {
             // API 호출 및 응답 처리
             HttpResponse response = httpClient.execute(request);
             HttpEntity responseEntity = response.getEntity();
-
+            
             // 응답 본문 출력
             if (responseEntity != null) {
                 String responseBody = EntityUtils.toString(responseEntity);
-                System.out.println(responseBody);
-                return responseBody; // 응답 본문을 반환합니다.
+
+                // JSON 파싱
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+                // 특정 데이터 추출 (예시: 첫 번째 메시지의 내용)
+                JsonNode messageNode = jsonNode.get("choices").get(0).get("message");
+                String content = messageNode.get("content").asText();
+
+                
+                //System.out.println(responseBody);
+                return content; // 응답 본문을 반환합니다.
             }
         } catch (Exception e) {
             e.printStackTrace();

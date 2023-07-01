@@ -64,13 +64,12 @@ public class ViewPart1 extends ViewPart {
             OpenAIHandler handler = new OpenAIHandler();
 
             try {
-                String responseBody = (String) handler.callOpenAPI(selectedText); 
-                if (responseBody != null) {
+                String reponse = (String) handler.callOpenAPI(selectedText); 
+                if (reponse != null) {
                     Display.getDefault().asyncExec(() -> {
                         if (ViewPart1.ansLabel != null && !ViewPart1.ansLabel.isDisposed()) {
                         	System.out.print("yes");
-                        	System.out.print(responseBody);
-                            ViewPart1.ansLabel.setText(responseBody);
+                            ViewPart1.ansLabel.setText(reponse);
                         }
                     });
                 }
